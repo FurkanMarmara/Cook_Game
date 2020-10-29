@@ -8,7 +8,8 @@
     FoodType6,
     FoodType7,
     FoodType8,
-    FoodType9
+    FoodType9,
+    FoodType10
 }
 
 public enum Directions

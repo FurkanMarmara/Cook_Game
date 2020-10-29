@@ -28,13 +28,20 @@ public class BoardController : MonoBehaviour
     private Food[,] _board;
 
     [SerializeField]
-    private Food _firstFood;
+    private List<Food> _firstFoods = new List<Food>();
+
+    [SerializeField]
+    private int _selectedMap = 0;
+
+    [SerializeField]
+    private ScoreController _scoreController;
 
     private int _gridCount = 4;
 
     private Vector2[,] _gridPositions;
 
     private int _emptyCount;
+
 
     private void Start()
     {
@@ -61,9 +68,9 @@ public class BoardController : MonoBehaviour
         }
     }
 
-    private IEnumerator SpawnFood(int count)
+    private IEnumerator SpawnFood(int count,float delayTime)
     {
-        WaitForSeconds waitTime = new WaitForSeconds(0.2f);
+        WaitForSeconds waitTime = new WaitForSeconds(delayTime);
         yield return waitTime;
         int randomX = 0;
         int randomY = 0;
@@ -75,14 +82,14 @@ public class BoardController : MonoBehaviour
                 randomY = Random.Range(0, _gridCount);
                 if (_board[randomX, randomY] == null)
                 {
-                    GameObject gO = Instantiate(_firstFood.gameObject, _gridPositions[randomX, randomY], Quaternion.identity);
+                    GameObject gO = Instantiate(_firstFoods[_selectedMap].gameObject, _gridPositions[randomX, randomY], Quaternion.identity);
                     Food food = _board[randomX, randomY] = gO.GetComponent<Food>();
                     food.SetGridValue(randomX, randomY);
                     _emptyCount -= 1;
                 }
                 else
                 {
-                    Debug.Log("Test Count");
+                    //Debug.Log("Test Count");
                     i--;
                 }
             }
@@ -92,6 +99,7 @@ public class BoardController : MonoBehaviour
             }
         }
     }
+
     private void CanMoveControl()
     {
         int canMoveCount = 0;
@@ -104,10 +112,10 @@ public class BoardController : MonoBehaviour
         }
         if (canMoveCount==0)
         {
-            Debug.Log("Game Over");
+            //Debug.Log("Game Over");
             GameManager.Instance().GameOver();
         }
-        Debug.Log("Move Count = " + canMoveCount);
+        //Debug.Log("Move Count = " + canMoveCount);
     }
 
     private void ResetToGame(bool tryAgain)
@@ -125,8 +133,13 @@ public class BoardController : MonoBehaviour
         _emptyCount = _gridCount * _gridCount;
         if (tryAgain)
         {
-            StartCoroutine(SpawnFood(2));
+            StartCoroutine(SpawnFood(2,0));
         }
+    }
+
+    public void SetMap(int mapNumber)
+    {
+        _selectedMap = mapNumber;
     }
 
     public void ChangeGridsFromDirection(Directions direction)//TODO: FOR GRİD COUNT'A GORE DUZENLENECEK
@@ -197,7 +210,7 @@ public class BoardController : MonoBehaviour
         }
         if (changedGridCount>0)
         {
-            StartCoroutine(SpawnFood(1));
+            StartCoroutine(SpawnFood(1,0.2f));
         }
         
     }
@@ -236,14 +249,31 @@ public class BoardController : MonoBehaviour
    
     public void StartToGame()
     {
-        StartCoroutine(SpawnFood(2));
+        StartCoroutine(SpawnFood(2,0));
     }
 
     public void TryAgain(bool tryAgain)
     {
         ResetToGame(tryAgain);
+        _scoreController.ResetScore();
     }
 
+    public void LevelUp()
+    {
+        _selectedMap++;
+        ResetToGame(true);
+        _scoreController.ResetScore();
+    }
+
+    public void SetScore(int score)
+    {
+        _scoreController.SetScore(score);
+    }//Bu GameManagerda olmalı.
+
+    public int GetScore()//Bu GameManagerda olmalı.
+    {
+        return _scoreController.GetScore();
+    }
    
     
 }

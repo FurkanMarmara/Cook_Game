@@ -236,6 +236,20 @@ public class Food : MonoBehaviour
         int foodTypeIndexValue = (int)foodType;
         _foodType = (FoodTypes)(foodTypeIndexValue + 1);
         ChangeSpriteByFoodType(foodTypeIndexValue + 1);
+        if (foodTypeIndexValue==0)
+        {
+            boardControllerInstance.SetScore(boardControllerInstance.GetScore() + 2);
+        }
+        else
+        {
+            boardControllerInstance.SetScore(boardControllerInstance.GetScore() + (foodTypeIndexValue * 2));
+        }
+        
+        if (_foodType==FoodTypes.FoodType10)
+        {
+            Debug.Log("Kazandınız");
+            GameManager.Instance().LevelUp();
+        }
     }
 
     public int CanMove()

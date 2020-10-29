@@ -56,7 +56,7 @@ public class UIManagerSystem : MonoBehaviour
     {
         if (isOpen)
         {
-            if (_openedPanels.Count<=1)
+            if (_openedPanels.Count<1)
             {
                 _openedPanels.Add(panel);
                 _currentPanel = _openedPanels[_openedPanels.Count - 1];
@@ -89,6 +89,21 @@ public class UIManagerSystem : MonoBehaviour
                 {
                     _previousPanel = null;
                 }
+            }
+            else
+            {
+                if (_openedPanels.Count>0)
+                {
+                    _currentPanel = _openedPanels[_openedPanels.Count - 1];
+                    OpenPanel(_currentPanel);
+                    _previousPanel = null;
+                }
+                else
+                {
+                    _previousPanel = null;
+                    
+                }
+                
             }
             
         }

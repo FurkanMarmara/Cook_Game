@@ -25,6 +25,11 @@ public class GameManager : MonoBehaviour
         return _instance;
     }
 
+    public void SelectMap(int mapNumber)
+    {
+        _boardController.SetMap(mapNumber);
+    }
+
     public void StartToGame()
     {
         _boardController.StartToGame();
@@ -38,6 +43,18 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         _uIController.GameOver();
+    }
+
+    public void ChangeScore(int score)
+    {
+        _uIController.ChangeScoreText(score);
+    }
+
+    public void LevelUp()
+    {
+        _boardController.LevelUp();
+        _uIController.ShowLevelUpPanel();
+        
     }
 
 }
